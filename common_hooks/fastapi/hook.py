@@ -17,6 +17,7 @@ class FastAPIHook(CoreHook):
     def attach(
         self,
         callback: SyncCallback | AsyncCallback,
+        /,
         *,
         condition: Condition | None = None,
     ) -> None:

@@ -20,6 +20,7 @@ class CoreHook(ABC):
     def attach(
         self,
         callback: Callable[..., Any],
+        /,
         *,
         condition: Condition | None = None,
     ) -> None:
