@@ -16,7 +16,7 @@ class HttpxHook(CoreHook):
 
     def __init__(self) -> None:
         super().__init__()
-        self._active_sync_callbacks: dict[int, list[Generator[Any, Any, Any]]] = {}
+        self._active_sync_callbacks: dict[int, list[Generator[Any, Any, Any]] | Any] = {}
         self._active_async_callbacks: dict[int, list[AsyncGenerator[Any, Any]]] = {}
 
     def attach(

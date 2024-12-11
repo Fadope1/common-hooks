@@ -9,8 +9,8 @@ from fastapi import FastAPI, Request, Response
 from common_hooks.conditions.condition import Condition
 from common_hooks.core import CoreHook
 
-SyncCallback = Callable[[Request], Generator[None, Response, None]]
-AsyncCallback = Callable[[Request], AsyncGenerator[None, Response]]
+SyncCallback = Callable[[Request], Generator[None, Response, None] | Generator]
+AsyncCallback = Callable[[Request], AsyncGenerator[None, Response] | AsyncGenerator]
 
 
 class FastAPIHook(CoreHook):

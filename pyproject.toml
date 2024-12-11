@@ -38,5 +38,6 @@ include = ["common_hooks", "common_hooks.*"]
 dev = [
     "fastapi>=0.115.5",
     "httpx>=0.28.0",
+    "pytest-httpx>=0.35.0",
     "pytest>=8.3.4",
 ]

@@ -47,4 +47,8 @@ class CoreHook(ABC):
     @abstractmethod
     def install(self, *args, **kwargs) -> None:
         """Install the attached hooks. Must be overridden by subclasses."""
-        pass
+
+    # TODO: Implement uninstall method
+    # @abstractmethod
+    # def uninstall(self, *args, **kwargs) -> None:
+    #     """Uninstall the attached hooks. Must be overridden by subclasses."""

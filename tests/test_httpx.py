@@ -1,26 +1,44 @@
-"""Test the httpx hook."""
+import pytest
+from collections.abc import Generator
 
 import httpx
-
 from common_hooks.conditions import HttpRequestCondition
+from common_hooks.httpx import hook
 
-from common_hooks.httpx import hook as test  # works
+from .exceptions import PreRequestCallbackError, PostRequestCallbackError
 
-
-async def callback():
-    """A sample callback function."""
-
-    class MyCallbackException(Exception): ...
-
-    raise MyCallbackException("Tes")
+URL = "https://test.com"
 
 
-complex_condition = HttpRequestCondition(methods=["GET", "POST"])
-hook.attach(callback, mode="after", condition=complex_condition)
+def sync_callback_pre(request: httpx.Request) -> Generator:
+    raise PreRequestCallbackError("Pre-request code called")
+    _ = yield
 
-# hook.attach(callback).when("after").methods(["GET", "POST"]).url_pattern("/v1") # alternative POC
 
-hook.install()
+def sync_callback_post(request: httpx.Request) -> Generator:
+    _ = yield
+    raise PostRequestCallbackError("Post-response code called")
 
-with httpx.Client(url="127.0.0.1") as client:
-    client.get("/test")
+
+def test_sync_callback_pre_exception(httpx_mock):
+    httpx_mock.add_response(url=URL, status_code=200, json={"message": "ok"})
+
+    condition = HttpRequestCondition(methods=["GET"])
+    hook.attach(sync_callback_pre, condition=condition)
+    hook.install()
+
+    with pytest.raises(PreRequestCallbackError) as exc_info:
+        with httpx.Client() as client:
+            client.get(URL)
+
+
+def test_sync_callback_post_exception(httpx_mock):
+    httpx_mock.add_response(url=URL, status_code=200, json={"message": "ok"})
+
+    condition = HttpRequestCondition(methods=["GET"])
+    hook.attach(sync_callback_post, condition=condition)
+    hook.install()
+
+    with pytest.raises(PostRequestCallbackError) as exc_info:
+        with httpx.Client() as client:
+            client.get(URL)
