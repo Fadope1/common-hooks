@@ -10,8 +10,8 @@ from common_hooks.core import CoreHook
 
 
 class FastAPIHook(CoreHook):
-    def apply(self, app: "FastAPI") -> None:
-        """Apply the attached hooks to the FastAPI app by using middlewares."""
+    def install(self, app: "FastAPI") -> None:
+        """install the attached hooks to the FastAPI app by using middlewares."""
 
         @app.middleware("http")
         async def _fastapi_hook_middleware(request: "Request", call_next: Callable) -> Any:

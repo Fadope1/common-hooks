@@ -12,25 +12,25 @@ There are multiple possible installations, depending on your need.
 1. Simple install only the core hooks that do no require any dependencies:
 
     ```bash
-    pip install default_hooks
+    pip install common_hooks
     ```
 
 1. Installing all (Not recommended):
 
     ```bash
-    pip install default_hooks[all]
+    pip install common_hooks[all]
     ```
 
 1. Installing only the hooks that require a specific package:
 
     ```bash
-    pip install default_hooks[package_name]
+    pip install common_hooks[package_name]
     ```
 
 1. You can install multiple hooks using comma separated list, for example:
 
     ```bash
-    pip install default_hooks[httpx,fastapi]
+    pip install common_hooks[httpx,fastapi]
     ```
 
 ## Available hooks include
@@ -40,49 +40,51 @@ There are multiple possible installations, depending on your need.
 
 ## Usage
 
-To attach a callback function before all httpx GET calls that have "/v1" in the url:
+To attach a callback function before all httpx GET calls:
 
 ```python
-from default_hooks.httpx import hook
-hook.attach(("GET", "/v1", "before"), lambda: print("Hello World!"))
+from common_hooks.httpx import hook
+from common_hooks.conditions import HttpRequestCondition
+
+complex_condition = HttpRequestCondition(methods=["GET"])
+hook.attach(lambda _x: print(_x), mode="before", condition=complex_condition)
 ```
 
 To attach a callback function after all httpx POST calls (after is default):
 
 ```python
-from default_hooks.httpx import hook
-hook.attach("POST", lambda: print("Hello World!"))
+from common_hooks.httpx import hook
+from common_hooks.conditions import HttpRequestCondition
+
+complex_condition = HttpRequestCondition(methods=["POST"])
+hook.attach(lambda _x: print("Hello World!"), condition=complex_condition)
 ```
 
-To attach a callback function before all httpx POST calls:
+After attaching, you must install the hooks:
 
 ```python
-from default_hooks.httpx import hook
-hook.attach(("POST", "", "before"), lambda: print("Hello World!"))
-```
-
-Attaching a callback function does not apply the changes directly, instead you must apply the attachments:
-
-```python
-hook.apply()
+hook.install()
 ```
 
 To use multiple hooks in the same script rename them using "as":
 
 ```python
-from default_hooks.httpx import hook as httpx_hook
-from default_hooks.fastapi import hook as fastapi_hook
+from common_hooks.conditions import HttpRequestCondition
+from common_hooks.httpx import hook as httpx_hook
+from common_hooks.fastapi import hook as fastapi_hook
 
-httpx_hook.attach("GET", lambda: print("Hello World!")) # prints "Hello World!" before all httpx GET calls
-httpx_hook.apply()
+complex_condition = HttpRequestCondition(methods=["POST"])
 
-fastapi_hook.attach("GET", lambda: print("Hello World!")) # prints "Hello World!" before endpoint is executed
-fastapi_hook.apply()
+hook.attach(lambda _x: print("Hello World!"), condition=complex_condition)
+httpx_hook.install()
+
+fastapi_hook.attach(lambda _x: print("Hello World!"), condition=complex_condition)
+fastapi_hook.install()
 ```
 
 ## Planned future hooks
 
-- none
+-
 
 ## Possible future hooks
 
@@ -97,5 +99,5 @@ If you have a hook you would like to add, please create a pull request with the 
 A hook must inherit from the CoreHook class you can import using:
 
 ```python
-from default_hooks import CoreHook
+from common_hooks import CoreHook
 ```

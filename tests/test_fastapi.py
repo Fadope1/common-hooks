@@ -16,7 +16,7 @@ def callback():
 hook.attach(callback, mode="before")
 
 app = FastAPI()
-hook.apply(app)
+hook.install(app)
 
 
 @app.get("/test")

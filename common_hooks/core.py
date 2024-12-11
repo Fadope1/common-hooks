@@ -1,46 +1,49 @@
 """Implementation of the core hook"""
 
-from inspect import iscoroutinefunction
-from typing import Literal
-from collections.abc import Callable
+from __future__ import annotations
+import inspect
 from abc import ABC, abstractmethod
+from typing import Any, TYPE_CHECKING
+from collections.abc import Generator, AsyncGenerator, Callable
 
-from .conditions.condition import Condition
+if TYPE_CHECKING:
+    from common_hooks.conditions.condition import Condition
 
 
 class CoreHook(ABC):
-    """CoreHook to inherit from when creating new hooks."""
+    """CoreHook to store synchronous and asynchronous generator callbacks."""
 
     def __init__(self) -> None:
-        self.pre_hooks: list[tuple[Callable, Condition]] = []
-        self.post_hooks: list[tuple[Callable, Condition]] = []
-        self._is_async = False
+        self._sync_hooks: list[tuple[Callable[..., Generator[Any, Any, Any]], Condition | None]] = []
+        self._async_hooks: list[tuple[Callable[..., AsyncGenerator[Any, Any]], Condition | None]] = []
 
     def attach(
         self,
-        callback: Callable,
+        callback: Callable[..., Any],
         *,
-        mode: Literal["after"] | Literal["before"] = "after",
         condition: Condition | None = None,
     ) -> None:
-        """Attach a callback to a specific condition.
+        """Attach a generator-based callback to a condition.
 
-        Args:
-            mode (str): When to execute the callback. Must be either 'before' or 'after'.
-            callback (callable): The function to be called when the condition is met.
-            condition (Condition): An instance of a Condition subclass that must be satisfied to trigger.
+        Raises:
+            TypeError: If callback is not a generator or async generator function.
         """
-        if mode == "after":
-            self.post_hooks.append((callback, condition))
-        elif mode == "before":
-            self.pre_hooks.append((callback, condition))
+        if inspect.isasyncgenfunction(callback):
+            self._async_hooks.append((callback, condition))
+        elif inspect.isgeneratorfunction(callback):
+            self._sync_hooks.append((callback, condition))
+        else:
+            raise TypeError(
+                "callback must be a generator function or an async generator function (must contain a yield)."
+            )
 
-        if iscoroutinefunction(callback):
-            self._is_async = True
+    def get_sync_hooks(self):
+        return self._sync_hooks
 
-        # if condition is None:
-        #     condition = Condition() # TODO: Provide always true condition
+    def get_async_hooks(self):
+        return self._async_hooks
 
     @abstractmethod
-    def apply(self, *args, **kwargs) -> None:
-        """Apply the attached hooks. This method must be overridden by subclasses."""
+    def install(self, *args, **kwargs) -> None:
+        """Install the attached hooks. Must be overridden by subclasses."""
+        pass

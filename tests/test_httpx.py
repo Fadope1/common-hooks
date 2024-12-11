@@ -20,7 +20,7 @@ hook.attach(callback, mode="after", condition=complex_condition)
 
 # hook.attach(callback).when("after").methods(["GET", "POST"]).url_pattern("/v1") # alternative POC
 
-hook.apply()
+hook.install()
 
 with httpx.Client(url="127.0.0.1") as client:
     client.get("/test")
