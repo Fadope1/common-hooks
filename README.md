@@ -1,15 +1,23 @@
 !!This is still under construction (not yet on pip)!!
 
+
 # Hooks
 
 This package is made to provide a simple way to create hooks (callback) to common packages and functions.
 Generally speaking, its relatively simple to create a hook, you import and attach to the process.
 
-## Installation
+## Next steps
+[x] Create basic tests
+[ ] Upload to pypi
+[ ] Advanced test support
+[ ] Integrate requests library
+[ ] Integrate aiohttp library
+
+## Installation (not yet working)
 
 There are multiple possible installations, depending on your need.
 
-1. Simple install only the core hooks that do no require any dependencies:
+1. Simple install only the core hooks that do no require any dependencies (which is currently none!):
 
     ```bash
     pip install common_hooks
@@ -40,33 +48,42 @@ There are multiple possible installations, depending on your need.
 
 ## Usage
 
-To attach a callback function before all httpx GET calls:
+1. You need to define a callback function that is structured like fastapi lifespans:
+
+```python
+def my_callback(input):
+    print(f"BEFORE: {inputs=}")
+    result = yield
+    print(f"AFTER: {result=}")
+```
+
+To attach the callback function to all httpx GET calls:
 
 ```python
 from common_hooks.httpx import hook
-from common_hooks.conditions import HttpRequestCondition
+from common_hooks.conditions import HttpRequestCondition # optional condition
 
 complex_condition = HttpRequestCondition(methods=["GET"])
-hook.attach(lambda _x: print(_x), mode="before", condition=complex_condition)
+hook.attach(my_callback, condition=complex_condition)
 ```
 
-To attach a callback function after all httpx POST calls (after is default):
+To attach a callback function to all httpx POST calls:
 
 ```python
 from common_hooks.httpx import hook
 from common_hooks.conditions import HttpRequestCondition
 
-complex_condition = HttpRequestCondition(methods=["POST"])
-hook.attach(lambda _x: print("Hello World!"), condition=complex_condition)
+complex_condition = HttpRequestCondition(methods=["POST"]) # optional
+hook.attach(my_callback, condition=complex_condition)
 ```
 
-After attaching, you must install the hooks:
+After attaching, you must install the hook to apply the callback(s):
 
 ```python
 hook.install()
 ```
 
-To use multiple hooks in the same script rename them using "as":
+To use multiple hooks in the same script rename them using "as", common conditions can be reused:
 
 ```python
 from common_hooks.conditions import HttpRequestCondition
@@ -75,23 +92,26 @@ from common_hooks.fastapi import hook as fastapi_hook
 
 complex_condition = HttpRequestCondition(methods=["POST"])
 
-hook.attach(lambda _x: print("Hello World!"), condition=complex_condition)
+hook.attach(my_callback, condition=complex_condition)
 httpx_hook.install()
 
-fastapi_hook.attach(lambda _x: print("Hello World!"), condition=complex_condition)
+fastapi_hook.attach(my_callback, condition=complex_condition)
 fastapi_hook.install()
 ```
+This script will apply the callback to all POST requests made by httpx and all POST requests received by fastapi.
 
-## Planned future hooks
-
--
-
-## Possible future hooks
+## Planned future hooks (Still needs POC)
 
 - aiohttp
 - requests
+
+## Possible future hook ideas
+
 - flask
 - django
+- sqlalchemy
+- inbuilt functions
+- inbuilt classes
 
 ## Contribution
 
@@ -101,3 +121,5 @@ A hook must inherit from the CoreHook class you can import using:
 ```python
 from common_hooks import CoreHook
 ```
+
+Check implementation of other hooks to see how to implement your own.
