@@ -9,7 +9,6 @@ authors = [
 ]
 urls = { "Homepage" = "https://github.com/Fadope1/common-hooks" }
 classifiers = [
-    "Private :: Do Not Upload",
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent"
