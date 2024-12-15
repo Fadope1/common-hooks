@@ -1,7 +1,4 @@
-!!This is still under construction (not yet on pip)!!
-
-
-# Hooks
+# Common-hooks
 
 This package is made to provide a simple way to create hooks (callback) to common packages and functions.
 Generally speaking, its relatively simple to create a hook, you import and attach to the process.
