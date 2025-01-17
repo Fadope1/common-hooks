@@ -1,40 +1,46 @@
 # Common-hooks
 
-This package is made to provide a simple way to create hooks (callback) to common packages and functions.
-Generally speaking, its relatively simple to create a hook, you import and attach to the process.
+This package is made to provide a simple way to create hooks (callbacks) to common packages and functions/ inbuilts.
+Generally speaking, its relatively simple to create a hook, you import and attach to a package.
 
 ## Next steps
+
 [x] Create basic tests
-[ ] Upload to pypi
+[x] Upload to pypi
 [ ] Advanced test support
+[ ] Exceptions hook
 [ ] Integrate requests library
 [ ] Integrate aiohttp library
 
-## Installation (not yet working)
+## Installation
 
 There are multiple possible installations, depending on your need.
 
-1. Simple install only the core hooks that do no require any dependencies (which is currently none!):
+1. Simple install only the core hooks that do not require any dependencies (inbuilt hooks!):
 
     ```bash
     pip install common_hooks
     ```
 
-1. Installing all (Not recommended):
+2. Installing all (Not recommended):
 
     ```bash
     pip install common_hooks[all]
     ```
 
-1. Installing only the hooks that require a specific package:
+3. Installing only the hooks that require a specific package:
 
     ```bash
     pip install common_hooks[package_name]
+    e.g.
+    pip install common_hooks[httpx]
     ```
 
-1. You can install multiple hooks using comma separated list, for example:
+4. You can install multiple hooks using comma separated list, for example:
 
     ```bash
+    pip install common_hooks[package_name,package_name2]
+    e.g.
     pip install common_hooks[httpx,fastapi]
     ```
 
@@ -45,7 +51,7 @@ There are multiple possible installations, depending on your need.
 
 ## Usage
 
-1. You need to define a callback function that is structured like fastapi lifespans:
+1. You need to define a callback function (similar to fastapi lifespans):
 
 ```python
 def my_callback(input):
@@ -60,18 +66,18 @@ To attach the callback function to all httpx GET calls:
 from common_hooks.httpx import hook
 from common_hooks.conditions import HttpRequestCondition # optional condition
 
-complex_condition = HttpRequestCondition(methods=["GET"])
-hook.attach(my_callback, condition=complex_condition)
+condition = HttpRequestCondition(methods=["GET"])
+hook.attach(my_callback, condition=condition)
 ```
 
-To attach a callback function to all httpx POST calls:
+(or) To attach a callback function to all httpx POST calls:
 
 ```python
 from common_hooks.httpx import hook
 from common_hooks.conditions import HttpRequestCondition
 
-complex_condition = HttpRequestCondition(methods=["POST"]) # optional
-hook.attach(my_callback, condition=complex_condition)
+condition = HttpRequestCondition(methods=["POST"]) # optional
+hook.attach(my_callback, condition=condition)
 ```
 
 After attaching, you must install the hook to apply the callback(s):
@@ -95,10 +101,12 @@ httpx_hook.install()
 fastapi_hook.attach(my_callback, condition=complex_condition)
 fastapi_hook.install()
 ```
+
 This script will apply the callback to all POST requests made by httpx and all POST requests received by fastapi.
 
-## Planned future hooks (Still needs POC)
+## Planned future hooks
 
+- exceptions
 - aiohttp
 - requests
 

@@ -1,7 +1,9 @@
 {
     "cSpell.words": [
+        "aiohttp",
         "fastapi",
-        "httpx"
+        "httpx",
+        "sqlalchemy"
     ],
     "python.testing.pytestArgs": [
         "tests"
