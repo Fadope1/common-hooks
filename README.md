@@ -48,8 +48,9 @@ There are multiple possible installations, depending on your need.
 
 - httpx
 - fastapi
+- exceptions
 
-## Usage
+## Basic usage
 
 1. You need to define a callback function (similar to fastapi lifespans):
 
@@ -64,9 +65,9 @@ To attach the callback function to all httpx GET calls:
 
 ```python
 from common_hooks.httpx import hook
-from common_hooks.conditions import HttpRequestCondition # optional condition
+from common_hooks.conditions import HttpCondition # optional condition
 
-condition = HttpRequestCondition(methods=["GET"])
+condition = HttpCondition(methods=["GET"])
 hook.attach(my_callback, condition=condition)
 ```
 
@@ -74,9 +75,9 @@ hook.attach(my_callback, condition=condition)
 
 ```python
 from common_hooks.httpx import hook
-from common_hooks.conditions import HttpRequestCondition
+from common_hooks.conditions import HttpCondition
 
-condition = HttpRequestCondition(methods=["POST"]) # optional
+condition = HttpCondition(methods=["POST"]) # optional
 hook.attach(my_callback, condition=condition)
 ```
 
@@ -89,11 +90,11 @@ hook.install()
 To use multiple hooks in the same script rename them using "as", common conditions can be reused:
 
 ```python
-from common_hooks.conditions import HttpRequestCondition
+from common_hooks.conditions import HttpCondition
 from common_hooks.httpx import hook as httpx_hook
 from common_hooks.fastapi import hook as fastapi_hook
 
-complex_condition = HttpRequestCondition(methods=["POST"])
+complex_condition = HttpCondition(methods=["POST"])
 
 hook.attach(my_callback, condition=complex_condition)
 httpx_hook.install()
@@ -104,9 +105,33 @@ fastapi_hook.install()
 
 This script will apply the callback to all POST requests made by httpx and all POST requests received by fastapi.
 
+### Exception httpx
+
+### Exception fastapi
+
+### Exception hook
+
+This hook is used to hook into exceptions, nonethless if its escaped or not.
+
+```python
+from common_hooks.exceptions import hook
+from common_hook.conditions import ExceptionCondition
+
+condition = ExceptionCondition(escaped=True, exceptions={ValueError})
+hook.attach(my_callback, condition=condition)
+hook.install()
+
+try:
+    raise ValueError("test")
+except ValueError:
+    pass
+```
+
+This script will call the callback even if the exception was caught and handled as escaped is set to True.
+
+
 ## Planned future hooks
 
-- exceptions
 - aiohttp
 - requests
 

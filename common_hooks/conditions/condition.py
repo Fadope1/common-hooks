@@ -7,7 +7,7 @@ class Condition(ABC):
     """Base class for conditions to create new conditions from."""
 
     @abstractmethod
-    def matches(self, **kwargs) -> bool:
+    def matches(self, *args, **kwargs) -> bool:
         """Determines if the condition is met based on the provided context.
 
         Returns:
