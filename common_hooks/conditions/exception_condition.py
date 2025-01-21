@@ -22,13 +22,14 @@ class ExceptionCondition(Condition):
         self.escaped = escaped
         self.exceptions: Container[Exception] = exceptions or set()
 
-    def matches(self, escaped: bool) -> bool:
+    def matches(self, exception: Exception, escaped: bool) -> bool:
         """Check if the conditions are met.
 
         Args:
-            escaped (bool): Whether the exception was escaped or not
+            exception (Exception): The exception that occured
+            escaped (bool): Whether the exception was escaped
 
         Returns:
             bool: True if the condition is met, False otherwise
         """
-        return escaped is self.escaped
+        return all({exception in self.exceptions, escaped is self.escaped})
