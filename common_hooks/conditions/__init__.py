@@ -1,4 +1,4 @@
-from .http_condition import HttpRequestCondition
+from .http_condition import HttpCondition
 
 
-__all__ = ["HttpRequestCondition"]
+__all__ = ["HttpCondition"]

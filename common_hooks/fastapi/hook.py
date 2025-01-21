@@ -4,7 +4,13 @@ from typing import Any
 from collections.abc import AsyncGenerator, Generator, Callable
 from collections.abc import Callable as CallableABC
 
-from fastapi import FastAPI, Request, Response
+from loguru import logger
+
+try:
+    from fastapi import FastAPI, Request, Response
+except ImportError:
+    logger.warning("FastAPI is not installed. Please install it using `pip install common-hook[fastapi]`.")
+    raise
 
 from common_hooks.conditions.condition import Condition
 from common_hooks.core import CoreHook

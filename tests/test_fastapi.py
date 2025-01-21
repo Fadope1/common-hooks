@@ -4,7 +4,7 @@ import pytest
 from fastapi import FastAPI, Request
 from fastapi.testclient import TestClient
 from common_hooks.fastapi import hook
-from common_hooks.conditions import HttpRequestCondition
+from common_hooks.conditions import HttpCondition
 
 from .exceptions import PreRequestCallbackError, PostRequestCallbackError
 
@@ -31,7 +31,7 @@ def app():
 
 
 def test_fastapi_sync_callback_pre_exception(app):
-    condition = HttpRequestCondition(methods=["GET"])
+    condition = HttpCondition(methods=["GET"])
     hook.attach(sync_callback_pre, condition=condition)
     hook.install(app)
 
@@ -41,7 +41,7 @@ def test_fastapi_sync_callback_pre_exception(app):
 
 
 def test_fastapi_sync_callback_post_exception(app):
-    condition = HttpRequestCondition(methods=["GET"])
+    condition = HttpCondition(methods=["GET"])
     hook.attach(sync_callback_post, condition=condition)
     hook.install(app)
 

@@ -1,24 +1,23 @@
 """Implementation of a http request condition."""
 
-from collections.abc import Iterable
+from collections.abc import Collection
+from typing import Literal
 
 from .condition import Condition
 
+Methods = Literal["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD", "CONNECT", "TRACE"]
 
-class HttpRequestCondition(Condition):
+
+class HttpCondition(Condition):
     """Definition of a http request condition."""
 
-    def __init__(self, methods: Iterable | None = None):
+    def __init__(self, methods: Collection[Methods] | None = None):
         """TODO:
         url_pattern? -> regex pattern
         urls? -> list of urls
         """
-        self.methods = methods
+        self.methods: Collection[Methods] = methods or set()
 
-    def matches(self, method: str, url: str) -> bool:
-        """Check if the condition is met."""
-        return any([method.upper() in self.methods, not self.methods])
-
-        # if self.method and self.method != method.upper():
-        #     return False
-        return True
+    def matches(self, method: Methods, url: str) -> bool:
+        """Check if the conditions are met."""
+        return all({method.upper() in self.methods, len(self.methods) != 0})
