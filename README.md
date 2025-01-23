@@ -5,12 +5,12 @@ Generally speaking, its relatively simple to create a hook, you import and attac
 
 ## Next steps
 
-[x] Create basic tests
-[x] Upload to pypi
-[ ] Advanced test support
-[ ] Exceptions hook
-[ ] Integrate requests library
-[ ] Integrate aiohttp library
+[x] Create basic tests<br>
+[x] Upload to pypi<br>
+[ ] Advanced test support<br>
+[ ] Exceptions hook<br>
+[ ] Integrate requests library<br>
+[ ] Integrate aiohttp library<br>
 
 ## Installation
 
