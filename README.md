@@ -3,6 +3,8 @@
 This package is made to provide a simple way to create hooks (callbacks) to common packages and functions/ inbuilts.
 Generally speaking, its relatively simple to create a hook, you import and attach to a package.
 
+[Pypi](https://pypi.org/project/common-hooks/)
+
 ## Next steps
 
 [x] Create basic tests<br>
@@ -19,13 +21,13 @@ There are multiple possible installations, depending on your need.
 1. Simple install only the core hooks that do not require any dependencies (inbuilt hooks!):
 
     ```bash
-    pip install common_hooks
+    pip install common-hooks
     ```
 
 2. Installing all (Not recommended):
 
     ```bash
-    pip install common_hooks[all]
+    pip install common-hooks[all]
     ```
 
 3. Installing only the hooks that require a specific package:
@@ -33,7 +35,7 @@ There are multiple possible installations, depending on your need.
     ```bash
     pip install common_hooks[package_name]
     e.g.
-    pip install common_hooks[httpx]
+    pip install common-hooks[httpx]
     ```
 
 4. You can install multiple hooks using comma separated list, for example:
@@ -41,7 +43,7 @@ There are multiple possible installations, depending on your need.
     ```bash
     pip install common_hooks[package_name,package_name2]
     e.g.
-    pip install common_hooks[httpx,fastapi]
+    pip install common-hooks[httpx,fastapi]
     ```
 
 ## Available hooks include
