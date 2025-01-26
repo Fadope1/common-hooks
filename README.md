@@ -118,6 +118,11 @@ This script will apply the callback to all POST requests made by httpx and all P
 - inbuilt functions
 - inbuilt classes
 
+## Other ideas
+
+- Callback decorator
+- Context manager
+
 ## Contribution
 
 If you have a hook you would like to add, please create a pull request with the hook and a test to ensure it works as expected.
