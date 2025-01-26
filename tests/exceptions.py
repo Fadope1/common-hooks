@@ -1,6 +1,6 @@
-class PreRequestCallbackError(Exception):
-    pass
+class PreCallbackError(Exception):
+    """Raised for testing for testing the pre callback"""
 
 
-class PostRequestCallbackError(Exception):
-    pass
+class PostCallbackError(Exception):
+    """Raised for testing for testing the post callback"""

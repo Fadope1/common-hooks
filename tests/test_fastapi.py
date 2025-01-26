@@ -6,17 +6,17 @@ from fastapi.testclient import TestClient
 from common_hooks.fastapi import hook
 from common_hooks.conditions import HttpCondition
 
-from .exceptions import PreRequestCallbackError, PostRequestCallbackError
+from .exceptions import PreCallbackError, PostCallbackError
 
 
 def sync_callback_pre(request: Request) -> Generator:
-    raise PreRequestCallbackError("Pre-request code called")
+    raise PreCallbackError("Pre-request code called")
     _ = yield
 
 
 def sync_callback_post(request: Request) -> Generator:
     _ = yield
-    raise PostRequestCallbackError("Post-response code called")
+    raise PostCallbackError("Post-response code called")
 
 
 @pytest.fixture
@@ -36,7 +36,7 @@ def test_fastapi_sync_callback_pre_exception(app):
     hook.install(app)
 
     client = TestClient(app)
-    with pytest.raises(PreRequestCallbackError) as exc_info:
+    with pytest.raises(PreCallbackError) as exc_info:
         client.get("/test")
 
 
@@ -46,5 +46,5 @@ def test_fastapi_sync_callback_post_exception(app):
     hook.install(app)
 
     client = TestClient(app)
-    with pytest.raises(PostRequestCallbackError) as exc_info:
+    with pytest.raises(PostCallbackError) as exc_info:
         client.get("/test")
