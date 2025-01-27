@@ -12,6 +12,7 @@ Generally speaking, its relatively simple to create a hook, you import and attac
 [ ] Advanced test support<br>
 [ ] Exceptions hook<br>
 [ ] Improve project structure<br>
+[ ] Add pyi files for full type hinting and full documentation<br>
 [ ] Add uninstall to hooks<br>
 [ ] Integrate requests library<br>
 [ ] Integrate aiohttp library<br>
