@@ -3,26 +3,28 @@
 from __future__ import annotations
 import inspect
 from abc import ABC, abstractmethod
-from typing import Any, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING, TypeVar, Generic
 from collections.abc import Generator, AsyncGenerator, Callable
 
 if TYPE_CHECKING:
     from common_hooks.conditions.condition import Condition
 
+TCondition = TypeVar("TCondition", bound=Condition)
 
-class CoreHook(ABC):
+
+class CoreHook(Generic[TCondition], ABC):
     """CoreHook to store synchronous and asynchronous generator callbacks."""
 
     def __init__(self) -> None:
-        self._sync_hooks: list[tuple[Callable[..., Generator[Any, Any, Any]], Condition | None]] = []
-        self._async_hooks: list[tuple[Callable[..., AsyncGenerator[Any, Any]], Condition | None]] = []
+        self._sync_hooks: list[tuple[Callable[..., Generator[Any, Any, Any]], TCondition | None]] = []
+        self._async_hooks: list[tuple[Callable[..., AsyncGenerator[Any, Any]], TCondition | None]] = []
 
     def attach(
         self,
         callback: Callable[..., Any],
         /,
         *,
-        condition: Condition | None = None,
+        condition: TCondition | None = None,
     ) -> None:
         """Attach a generator-based callback to a condition.
 
