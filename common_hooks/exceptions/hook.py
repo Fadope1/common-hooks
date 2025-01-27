@@ -35,20 +35,23 @@ class ExceptionHook(CoreHook):
 
         for callback, condition in self.get_sync_hooks():
             if condition is not None and condition.escaped:
-                sys.excepthook = partialmethod(self.handle_simple_exception, callback=callback)
+                sys.excepthook = partialmethod(self.handle_simple_exception, callback=callback, condition=condition)
             # else: # TODO: fix this
-            #     sys.settrace(partialmethod(self.handle_advanced_exception, callback=callback))
+            #     sys.settrace(partialmethod(self.handle_advanced_exception, callback=callback, condition=condition))
 
-    def handle_simple_exception(self, callback, exc_type, exc_value, exc_traceback):
+    def handle_simple_exception(self, callback, condition: ExceptionCondition, exc_type, exc_value, exc_traceback):
         """Handle not escaped errors"""
-        callback(exc_type, exc_value, exc_traceback, False)
+        if condition.matches(exc_type, False):
+            callback(exc_type, exc_value, exc_traceback, False)
 
-    def handle_advanced_exception(self, callback, _frame, event, arg):
+    def handle_advanced_exception(self, callback, condition: ExceptionCondition, _frame, event, arg):
         """Handle escaped errors"""
 
         if event == "exception":
             exc_type, exc_value, exc_traceback = arg
-            callback(exc_type, exc_value, exc_traceback, True)  # TODO: calculate the escaped bool
+
+            if condition.matches(exc_type, False):
+                callback(exc_type, exc_value, exc_traceback, True)  # TODO: calculate the escaped bool
 
 
 hook = ExceptionHook()
