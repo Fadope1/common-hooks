@@ -3,11 +3,10 @@
 from __future__ import annotations
 import inspect
 from abc import ABC, abstractmethod
-from typing import Any, TYPE_CHECKING, TypeVar, Generic
+from typing import Any, TypeVar, Generic
 from collections.abc import Generator, AsyncGenerator, Callable
 
-if TYPE_CHECKING:
-    from common_hooks.conditions.condition import Condition
+from common_hooks.conditions.condition import Condition
 
 TCondition = TypeVar("TCondition", bound=Condition)
 
