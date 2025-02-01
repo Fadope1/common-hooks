@@ -1,4 +1,11 @@
-"""Implementation of a exception condition."""
+"""Implementation of a exception condition.
+
+Todos:
+- Exception list cannot be empty. Empty should mean all is accepted.
+
+Ideas:
+- split exceptions into two categories. Type check and subclass check?
+"""
 
 from collections.abc import Container
 
@@ -17,7 +24,7 @@ class ExceptionCondition(Condition):
 
         Args:
             escaped (bool, optional): Whether to only trigger for non-escaped exceptions
-            exceptions (Container[type[Exception]], optional): Exceptions to trigger the condition for
+            exceptions (Container[type[Exception]], optional): Exceptions to trigger the condition for (empty means all).
         """
         self.escaped = escaped
         self.exceptions: Container[type[Exception]] = exceptions or set()
