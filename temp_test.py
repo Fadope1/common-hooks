@@ -13,4 +13,4 @@ def test(*args, **kwargs):
 exceptions.hook.attach(test, condition=condition)
 exceptions.hook.install()
 
-raise TypeError("test")
+raise ValueError("test")

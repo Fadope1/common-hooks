@@ -29,7 +29,7 @@ class ExceptionCondition(Condition):
         self.escaped = escaped
         self.exceptions: Container[type[Exception]] = exceptions or set()
 
-    def matches(self, exception: Exception, escaped: bool) -> bool:
+    def matches(self, exception: type[BaseException], escaped: bool) -> bool:
         """Check if the conditions are met.
 
         Args:
