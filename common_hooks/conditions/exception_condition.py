@@ -7,7 +7,7 @@ Ideas:
 - split exceptions into two categories. Type check and subclass check?
 """
 
-from collections.abc import Container
+from collections.abc import Collection
 
 from .condition import Condition
 
@@ -18,25 +18,32 @@ class ExceptionCondition(Condition):
     def __init__(
         self,
         escaped: bool = False,
-        exceptions: Container[type[Exception]] | None = None,
+        exceptions: Collection[type[Exception]] | None = None,
+        check_subclass: bool = False,
     ) -> None:
         """Initialize the condition.
 
         Args:
             escaped (bool, optional): Whether to only trigger for non-escaped exceptions
-            exceptions (Container[type[Exception]], optional): Exceptions to trigger the condition for (empty means all).
+            exceptions (Collection[type[Exception]], optional): Exceptions to trigger the condition for (empty means all).
+            check_subclass (bool, optional): Whether to check if the exception is a subclass of any in exceptions or exact match.
         """
         self.escaped = escaped
-        self.exceptions: Container[type[Exception]] = exceptions or set()
+        self.exceptions: Collection[type[Exception]] = exceptions or set()
+        self.check_subclass = check_subclass
 
     def matches(self, exception: type[BaseException], escaped: bool) -> bool:
         """Check if the conditions are met.
 
         Args:
-            exception (Exception): The exception that occured
+            exception (Exception): The exception that occurred
             escaped (bool): Whether the exception was escaped
 
         Returns:
             bool: True if the condition is met, False otherwise
         """
-        return all({exception in self.exceptions, escaped is self.escaped})
+        if self.check_subclass:
+            exception_match = any(issubclass(exception, exc) for exc in self.exceptions)
+        else:
+            exception_match = exception in self.exceptions
+        return all({exception_match, escaped is self.escaped})

@@ -5,15 +5,16 @@ Generally speaking, its relatively simple to create a hook, you import and attac
 
 [Pypi](https://pypi.org/project/common-hooks/)
 
-## Next steps
+## Next ideas
 
 [x] Create basic tests<br>
 [x] Upload to pypi<br>
+[x] Exceptions hook<br>
 [ ] Advanced test support<br>
-[ ] Exceptions hook<br>
 [ ] Improve project structure<br>
 [ ] Add pyi files for full type hinting and full documentation<br>
 [ ] Add uninstall to hooks<br>
+[ ] Integrate context managers to core hook<br>
 [ ] Integrate requests library<br>
 [ ] Integrate aiohttp library<br>
 
