@@ -9,18 +9,16 @@ from typing import Protocol
 import sys
 import warnings
 from types import TracebackType
-import threading
-import asyncio
 
-from typing import NoReturn, Any
-from collections.abc import Generator, Callable
-from functools import partial
-
+from common_hooks.exceptions.exception_types import CallbackTypes, SyncCallback
+from .handler import (
+    SysExcepthookHandler,
+    # ThreadingExcepthookHandler,
+    # AsyncioExcepthookHandler,
+    # TrioExcepthookHandler,
+)
 from common_hooks.conditions import ExceptionCondition
 from common_hooks.core import CoreHook
-
-InputParams = tuple[Any, Any, Any, bool]
-SyncCallback = Callable[[*InputParams], Generator[None, None, NoReturn] | Generator]
 
 
 class ExceptionHandler(Protocol):
@@ -29,8 +27,10 @@ class ExceptionHandler(Protocol):
         callback: SyncCallback,
         condition: ExceptionCondition,
     ) -> None:
-        """Install the exception handler with the given callback and condition."""
+        """Tries to install the exception handler with the given callback and condition."""
         ...
+
+    # def install_trace()
 
 
 class ExceptionHook(CoreHook):
@@ -52,7 +52,7 @@ class ExceptionHook(CoreHook):
 
         if handlers is None:
             handlers = [
-                # SysExcepthookHandler(),
+                SysExcepthookHandler(),  # type: ignore # For some reason pylance cannot understand the type
                 # ThreadingExcepthookHandler(),
                 # AsyncioExcepthookHandler(),
                 # TrioExcepthookHandler(),
@@ -62,46 +62,12 @@ class ExceptionHook(CoreHook):
             if condition is not None and condition.escaped is False:
                 warnings.warn("Catching exceptions adds overhead to the application. Use with caution.")
                 if condition is None or not condition.escaped:
-                    for handler in handlers:
+                    for handler in handlers:  # type: ignore # For some reason pylance cannot understand the type
                         handler.install_excepthook(callback, condition)
                 # self.install_except_hooks(callback, condition)
             else:
                 warnings.warn("Escaped exceptions are extremely impactful on performance. Use with caution.")
                 # sys.settrace(partialmethod(self.handle_settrace, callback=callback, condition=condition)) #! will implement this later
-
-    def install_except_hooks(self, callback: SyncCallback, condition) -> None:
-        """Install except hooks into the application"""
-
-        sys.excepthook = partial(self.handle_excepthook, callback=callback, condition=condition)
-
-        def handle_threading_excepthook(args):
-            exc_type, exc_value, exc_traceback = args.exc_type, args.exc_value, args.exc_traceback
-            self.handle_excepthook(exc_type, exc_value, exc_traceback, callback, condition)
-
-        threading.excepthook = handle_threading_excepthook
-
-        def handle_asyncio_excepthook(loop, context):
-            msg = context.get("exception", context["message"])
-            exc_type = type(msg)
-            exc_value = msg
-            exc_traceback = msg.__traceback__
-            self.handle_excepthook(exc_type, exc_value, exc_traceback, callback, condition)
-
-        loop = asyncio.get_event_loop()
-        loop.set_exception_handler(handle_asyncio_excepthook)
-
-        # try:
-        #     import trio
-
-        #     async def trio_handle_exception(exc_type, exc_value, exc_traceback):
-        #         for callback, condition in self.get_sync_hooks():
-        #             if condition and condition.matches(exc_type, False):
-        #                 for _ in callback(exc_type, exc_value, exc_traceback, False):
-        #                     pass
-
-        #     trio.hazmat.install_global_exception_handler(trio_handle_exception)
-        # except ImportError:
-        #     pass
 
     def handle_excepthook(
         self,

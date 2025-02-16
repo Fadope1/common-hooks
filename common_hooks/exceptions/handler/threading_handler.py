@@ -1,7 +1,17 @@
+"""Class to handle threading exceptions"""
+
+import sys
+import threading
+from types import TracebackType
+
+from common_hooks.conditions import ExceptionCondition
+from ..exception_types import CallbackTypes
+
+
 class ThreadingExcepthookHandler:
-    def install(
+    def install_excepthook(
         self,
-        callback: SyncCallback,
+        callback: CallbackTypes,
         condition: ExceptionCondition,
     ) -> None:
         def handle_threading_excepthook(args: threading.ExceptHookArgs) -> None:
@@ -21,7 +31,7 @@ class ThreadingExcepthookHandler:
         exc_value: BaseException,
         exc_traceback: TracebackType,
         *,
-        callback: SyncCallback,
+        callback: CallbackTypes,
         condition: ExceptionCondition,
     ) -> None:
         if condition.matches(exc_type, False):

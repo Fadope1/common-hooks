@@ -1,7 +1,16 @@
+"""Class to handle asyncio exceptions"""
+
+import asyncio
+from types import TracebackType
+
+from common_hooks.conditions import ExceptionCondition
+from ..exception_types import CallbackTypes
+
+
 class AsyncioExcepthookHandler:
-    def install(
+    def install_excepthook(
         self,
-        callback: SyncCallback,
+        callback: CallbackTypes,
         condition: ExceptionCondition,
     ) -> None:
         loop = asyncio.get_event_loop()
@@ -24,7 +33,7 @@ class AsyncioExcepthookHandler:
         exc_value: BaseException,
         exc_traceback: TracebackType,
         *,
-        callback: SyncCallback,
+        callback: CallbackTypes,
         condition: ExceptionCondition,
     ) -> None:
         if condition.matches(exc_type, False):

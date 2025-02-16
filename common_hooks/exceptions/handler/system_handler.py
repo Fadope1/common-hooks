@@ -1,5 +1,15 @@
+"""Class to handle the normal sync system exception"""
+
+import sys
+from types import TracebackType
+from functools import partial
+
+from common_hooks.conditions import ExceptionCondition
+from common_hooks.exceptions.exception_types import CallbackTypes, SyncCallback
+
+
 class SysExcepthookHandler:
-    def install(
+    def install_excepthook(
         self,
         callback: SyncCallback,
         condition: ExceptionCondition,

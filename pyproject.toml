@@ -25,6 +25,7 @@ build-backend = "setuptools.build_meta"
 [project.optional-dependencies]
 httpx = ["httpx"]
 fastapi = ["fastapi"]
+trio = ["trio"]
 all = ["httpx", "fastapi"]
 
 [tool.uv]
@@ -40,5 +41,11 @@ dev = [
     "pytest-httpx>=0.35.0",
     "pytest>=8.3.4",
     "uvicorn>=0.32.1",
+    "mypy>=1.15.0",
 ]
 
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+exclude = []

@@ -21,17 +21,19 @@ def raise_exception():
     raise ValueError("test2")
 
 
-def main():
-    threads = []
-    for _ in range(2):
-        thread = threading.Thread(target=raise_exception)
-        threads.append(thread)
-        thread.start()
+# def main():
+#     threads = []
+#     for _ in range(2):
+#         thread = threading.Thread(target=raise_exception)
+#         threads.append(thread)
+#         thread.start()
 
-    for thread in threads:
-        thread.join()
+#     for thread in threads:
+#         thread.join()
 
-    print("done")
+#     print("done")
 
 
-main()
+# main()
+
+raise ValueError("test")

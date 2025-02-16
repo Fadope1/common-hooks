@@ -1,12 +1,24 @@
+"""Class to handle Trio exceptions"""
+
+from types import TracebackType
+
+try:
+    import trio
+except ImportError:
+    trio = None
+
+from common_hooks.conditions import ExceptionCondition
+from ..exception_types import CallbackTypes
+
+
 class TrioExcepthookHandler:
-    def install(
+    def install_excepthook(
         self,
-        callback: SyncCallback,
+        callback: CallbackTypes,
         condition: ExceptionCondition,
     ) -> None:
         if trio is None:
-            warnings.warn("Trio is not available, skipping Trio exception handler.")
-            return
+            return None
 
         async def trio_handle_exception(
             exc_type: type[BaseException],
